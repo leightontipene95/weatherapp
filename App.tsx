@@ -2,9 +2,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import Home from './app/components/Home';
-import Landing from './app/components/Landing';
 import { ThemeProvider, useTheme } from './app/contexts/ThemeContext';
+import Home from './app/screens/Home';
+import Landing from './app/screens/Landing';
 import { RootStackParamList } from './types/navigation';
 
 const Stack = createStackNavigator<RootStackParamList>();

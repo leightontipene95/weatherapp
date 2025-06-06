@@ -109,7 +109,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   const theme = isDarkMode ? darkTheme : lightTheme;
 
-  // Don't render until theme is loaded
   if (isLoading) {
     return null;
   }

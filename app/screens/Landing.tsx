@@ -17,11 +17,10 @@ import Animated, {
 import Cloud from '../../assets/images/Cloud';
 import Moon from '../../assets/images/Moon';
 import Sun from '../../assets/images/Sun';
-import { RootStackParamList } from '../../types/navigation';
+import { DarkModeToggle } from '../components/DarkModeToggle';
 import { useTheme } from '../contexts/ThemeContext';
-import { DarkModeToggle } from './DarkModeToggle';
 
-type LandingNavigationProp = StackNavigationProp<RootStackParamList, 'Landing'>;
+type LandingNavigationProp = StackNavigationProp
 
 const { width } = Dimensions.get('window');
 
@@ -293,9 +292,17 @@ const styles = StyleSheet.create({
   },
   toggleWrapper: {
     position: 'absolute',
-    top: 40,
-    right: 20,
+    top: 60,
+    right: 24,
     zIndex: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
   },
 });
 

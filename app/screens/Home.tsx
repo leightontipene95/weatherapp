@@ -2,11 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import Header from '../components/Header';
+import { SearchBar } from '../components/SearchBar';
+import { WeatherCard } from '../components/WeatherCard';
 import { useTheme } from '../contexts/ThemeContext';
 import { fetchWeatherByCoords, getCurrentWeather, isValidCityName, WeatherResponse } from '../services/weatherService';
-import Header from './Header';
-import { SearchBar } from './SearchBar';
-import { WeatherCard } from './WeatherCard';
 
 const CITIES_STORAGE_KEY = '@weather_app_cities';
 
@@ -178,12 +178,15 @@ export default function Home() {
     }
 
     try {
-      // Add city to the list
+      // First, validate the city by fetching its weather data
+      const weatherData = await getCurrentWeather(cityName);
+      
+      // If we get here, the city is valid and we have weather data
       const updatedCities = [...cities, cityName];
       setCities(updatedCities);
       
-      // Fetch weather for the new city
-      await fetchCitiesWeather([cityName]);
+      // Add the weather data to our cache
+      setCitiesWeather(prev => ({ ...prev, [cityName]: weatherData }));
       
       // Save updated cities list to storage
       await saveCitiesToStorage(updatedCities);
@@ -193,14 +196,26 @@ export default function Home() {
       
       // Show success message
       Alert.alert('Success', `${cityName} has been added to your weather list!`);
-    } catch (error) {
-      // Remove city from list if weather fetch failed
-      setCities(cities);
+    } catch (error: any) {
       console.error('Error adding city:', error);
-      Alert.alert(
-        'Error',
-        `Failed to get weather data for ${cityName}. Please check the city name and try again.`
-      );
+      
+      // Show specific error messages based on the error type
+      if (error?.cod === '404' || error?.cod === 404) {
+        Alert.alert(
+          'City Not Found',
+          `Sorry, we couldn't find weather data for "${cityName}". Please check the spelling and try again.`
+        );
+      } else if (error?.cod === 'NETWORK_ERROR' || !navigator.onLine) {
+        Alert.alert(
+          'Network Error',
+          'Please check your internet connection and try again.'
+        );
+      } else {
+        Alert.alert(
+          'Error',
+          `Failed to get weather data for ${cityName}. Please try again later.`
+        );
+      }
     }
   };
 

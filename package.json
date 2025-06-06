@@ -8,7 +8,11 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "update:preview": "eas update --branch preview --message",
+    "update:production": "eas update --branch production --message",
+    "build:preview": "eas build --profile preview",
+    "build:production": "eas build --profile production"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
@@ -25,11 +29,13 @@
     "expo-image": "~2.2.0",
     "expo-linear-gradient": "~14.1.5",
     "expo-linking": "~7.1.5",
+    "expo-location": "~18.1.5",
     "expo-router": "~5.0.7",
     "expo-splash-screen": "~0.30.9",
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.5",
     "expo-system-ui": "~5.0.8",
+    "expo-updates": "^0.28.14",
     "expo-web-browser": "~14.1.6",
     "react": "19.0.0",
     "react-dom": "19.0.0",
@@ -39,8 +45,7 @@
     "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
     "react-native-web": "~0.20.0",
-    "react-native-webview": "13.13.5",
-    "expo-location": "~18.1.5"
+    "react-native-webview": "13.13.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

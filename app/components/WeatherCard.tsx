@@ -14,7 +14,6 @@ interface WeatherCardProps {
   icon: string;
   onDelete?: () => void;
   isDeletable?: boolean;
-  isCurrentLocation?: boolean;
 }
 
 export const WeatherCard: React.FC<WeatherCardProps> = ({
@@ -24,7 +23,6 @@ export const WeatherCard: React.FC<WeatherCardProps> = ({
   icon,
   onDelete,
   isDeletable = false,
-  isCurrentLocation = false,
 }) => {
   const { theme, isDarkMode } = useTheme();
   const [showDeleteIcon, setShowDeleteIcon] = useState(false);
@@ -47,25 +45,15 @@ export const WeatherCard: React.FC<WeatherCardProps> = ({
     }
   };
 
-  const gradientColors = isCurrentLocation
-    ? (isDarkMode 
-        ? ['rgba(16, 185, 129, 0.9)', 'rgba(5, 150, 105, 0.9)'] as const  // Green gradient for location in dark mode
-        : ['rgba(34, 197, 94, 0.9)', 'rgba(22, 163, 74, 0.9)'] as const)   // Green gradient for location in light mode
-    : (isDarkMode 
-        ? ['rgba(30, 58, 138, 0.9)', 'rgba(15, 23, 42, 0.9)'] as const
-        : ['rgba(252, 234, 187, 0.9)', 'rgba(248, 181, 0, 0.9)'] as const);
+  const gradientColors = isDarkMode 
+    ? ['rgba(30, 58, 138, 0.9)', 'rgba(15, 23, 42, 0.9)'] as const
+    : ['rgba(252, 234, 187, 0.9)', 'rgba(248, 181, 0, 0.9)'] as const;
 
   const shadowColor = isDarkMode ? 'rgba(0, 0, 0, 0.5)' : 'rgba(0, 0, 0, 0.2)';
-  
-  // Special styling for current location card
-  const locationBorderStyle = isCurrentLocation ? {
-    borderWidth: 2,
-    borderColor: isDarkMode ? '#10b981' : '#16a34a', // Green border for current location
-  } : {};
 
   return (
     <TouchableOpacity 
-      style={[styles.container, { shadowColor }, locationBorderStyle]}
+      style={[styles.container, { shadowColor }]}
       onLongPress={handleLongPress}
       onPress={handleCardPress}
       activeOpacity={0.9}
