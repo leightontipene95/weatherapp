@@ -1,82 +1,92 @@
-import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import Cloud from '../../assets/images/Cloud';
 import Moon from '../../assets/images/Moon';
 import Sun from '../../assets/images/Sun';
-import { useDarkMode } from '../hooks/useDarkMode';
+import { useTheme } from '../contexts/ThemeContext';
+import { DarkModeToggle } from './DarkModeToggle';
 
 const { width } = Dimensions.get('window');
 const ELEMENT_SIZE_RATIO = 0.2; // Smaller size for header
 const MOON_SIZE_RATIO = 0.13; // Even smaller moon
 
 export const Header = () => {
-  const [isDark] = useDarkMode();
+  const { theme, isDarkMode } = useTheme();
+
+  const containerStyle = useAnimatedStyle(() => ({
+    width: '100%',
+    height: width * 0.37, // Adjusted height to accommodate padding and content
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 5,
+  }));
 
   const sunStyle = useAnimatedStyle(() => ({
-    opacity: isDark ? 0 : 1,
+    opacity: isDarkMode ? 0 : 1,
   }));
 
   const moonStyle = useAnimatedStyle(() => ({
-    opacity: isDark ? 1 : 0,
+    opacity: isDarkMode ? 1 : 0,
   }));
 
-  const handleSettingsPress = () => {
-    // Handle settings press
-    console.log('Settings pressed');
-  };
-
   return (
-    <View style={styles.container}>
-      <View style={styles.weatherElements}>
-        <Animated.View style={[styles.moonWrapper, moonStyle]}>
-          <Moon size={width * MOON_SIZE_RATIO} color="#FFFFFF" />
-        </Animated.View>
-        <Animated.View style={[styles.sunWrapper, sunStyle]}>
-          <Sun size={width * ELEMENT_SIZE_RATIO} color="#FFFFFF" />
-        </Animated.View>
-        <View style={styles.leftCloudWrapper}>
-          <Cloud 
-            width={width * ELEMENT_SIZE_RATIO} 
-            height={width * ELEMENT_SIZE_RATIO * 0.6} 
-            color="#FFFFFF" 
-          />
-        </View>
-        <View style={styles.rightCloudWrapper}>
-          <Cloud 
-            width={width * ELEMENT_SIZE_RATIO * 1.1} 
-            height={width * ELEMENT_SIZE_RATIO * 0.65} 
-            color="#FFFFFF" 
-          />
-        </View>
-      </View>
-      <Pressable 
-        style={({pressed}) => [
-          styles.settingsButton,
-          pressed && styles.settingsButtonPressed
-        ]}
-        onPress={handleSettingsPress}
+    <Animated.View style={[containerStyle]}>
+      <LinearGradient
+        colors={isDarkMode ? ['rgba(15, 23, 42, 0.9)', 'rgba(30, 58, 138, 0.9)'] : ['rgba(248, 181, 0, 0.9)', 'rgba(252, 234, 187, 0.9)']}
+        style={styles.gradientContainer}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
       >
-        <Ionicons 
-          name="settings-outline" 
-          size={24} 
-          color={isDark ? "#FFFFFF" : "#333333"} 
-        />
-      </Pressable>
-    </View>
+        <View style={styles.contentContainer}>
+          <View style={styles.weatherElements}>
+            <Animated.View style={[styles.moonWrapper, moonStyle]}>
+              <Moon size={width * MOON_SIZE_RATIO} color="#FFFFFF" />
+            </Animated.View>
+            <Animated.View style={[styles.sunWrapper, sunStyle]}>
+              <Sun size={width * ELEMENT_SIZE_RATIO} color="#FFFFFF" />
+            </Animated.View>
+            <View style={styles.leftCloudWrapper}>
+              <Cloud 
+                width={width * ELEMENT_SIZE_RATIO} 
+                height={width * ELEMENT_SIZE_RATIO * 0.6} 
+                color="#FFFFFF" 
+              />
+            </View>
+            <View style={styles.rightCloudWrapper}>
+              <Cloud 
+                width={width * ELEMENT_SIZE_RATIO * 1.1} 
+                height={width * ELEMENT_SIZE_RATIO * 0.65} 
+                color="#FFFFFF" 
+              />
+            </View>
+          </View>
+          {/* Dark mode toggle */}
+          <DarkModeToggle size="small" />
+        </View>
+      </LinearGradient>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: width * 0.25,
+  gradientContainer: {
+    flex: 1,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+  },
+  contentContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 40,
+    flex: 1,
   },
   weatherElements: {
     position: 'relative',
@@ -128,23 +138,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 5,
-  },
-  settingsButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  settingsButtonPressed: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    transform: [{ scale: 0.95 }],
   },
 });
 

@@ -6,28 +6,28 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
-    cancelAnimation,
-    Easing,
-    useAnimatedStyle,
-    useSharedValue,
-    withRepeat,
-    withSpring,
-    withTiming
+  cancelAnimation,
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSpring,
+  withTiming
 } from 'react-native-reanimated';
 import Cloud from '../../assets/images/Cloud';
 import Moon from '../../assets/images/Moon';
 import Sun from '../../assets/images/Sun';
 import { RootStackParamList } from '../../types/navigation';
-import { useDarkMode } from '../hooks/useDarkMode';
-import DarkModeToggle from './DarkModeToggle';
+import { useTheme } from '../contexts/ThemeContext';
+import { DarkModeToggle } from './DarkModeToggle';
 
 type LandingNavigationProp = StackNavigationProp<RootStackParamList, 'Landing'>;
 
 const { width } = Dimensions.get('window');
 
 const Landing = () => {
-  const [isDark, setIsDark] = useDarkMode(false);
-  const themeProgress = useSharedValue(isDark ? 1 : 0);
+  const { theme, isDarkMode } = useTheme();
+  const themeProgress = useSharedValue(isDarkMode ? 1 : 0);
   const navigation = useNavigation<LandingNavigationProp>();
   
   // Animation values
@@ -74,9 +74,9 @@ const Landing = () => {
 
   // Animate theme transition
   useEffect(() => {
-    themeProgress.value = withTiming(isDark ? 1 : 0, { duration: 300 });
+    themeProgress.value = withTiming(isDarkMode ? 1 : 0, { duration: 300 });
     
-    if (isDark) {
+    if (isDarkMode) {
       // Fade out sun
       sunOpacity.value = withTiming(0, { duration: 300 });
       // Fade in moon
@@ -87,7 +87,7 @@ const Landing = () => {
       // Fade out moon
       moonOpacity.value = withTiming(0, { duration: 300 });
     }
-  }, [isDark]);
+  }, [isDarkMode]);
 
   const handleGetStarted = () => {
     // Stop continuous rotation to prevent jitter during large scale
@@ -98,7 +98,7 @@ const Landing = () => {
 
     // Delay scale animation by 1 second
     setTimeout(() => {
-      if (isDark) {
+      if (isDarkMode) {
         moonScale.value = withTiming(15, { duration: 1000, easing: Easing.inOut(Easing.ease) });
       } else {
         sunScale.value = withTiming(15, { duration: 1000, easing: Easing.inOut(Easing.ease) });
@@ -153,10 +153,10 @@ const Landing = () => {
         />
       </Animated.View>
       <View style={styles.contentWrapper}>
-        <StatusBar style={isDark ? 'light' : 'dark'} />
+        <StatusBar style={isDarkMode ? 'light' : 'dark'} />
 
         <View style={styles.toggleWrapper}>
-          <DarkModeToggle value={isDark} onValueChange={setIsDark} />
+          <DarkModeToggle size="medium" />
         </View>
 
         <View style={styles.logoContainer}>
@@ -179,7 +179,7 @@ const Landing = () => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={handleGetStarted} activeOpacity={0.85}>
             <View style={styles.button}>
-              <Text style={[styles.buttonText, { color: isDark ? '#1E3A8A' : '#f8b500' }]}>Get Started</Text>
+              <Text style={[styles.buttonText, { color: isDarkMode ? '#1E3A8A' : '#f8b500' }]}>Get Started</Text>
             </View>
           </TouchableOpacity>
         </View>
