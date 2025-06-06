@@ -10,7 +10,7 @@ A simple React Native weather application built with **Expo**. Stay updated with
 1. Download **Expo Go** on your mobile device:
    - iOS: https://apps.apple.com/app/expo-go/id982107779  
    - Android: https://play.google.com/store/apps/details?id=host.exp.exponent  
-2. Open the camera or QR scanner in **Expo Go** and scan the preview QR code below:
+2. Open the camera app (ios) or QR scanner (Android) and scan the preview QR code below:
    ![Scan QR code](assets/images/previewQR.svg)
 
 ---
