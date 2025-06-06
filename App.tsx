@@ -13,7 +13,8 @@ export default function App() {
       <Stack.Navigator
         initialRouteName="Landing"
         screenOptions={{
-          headerShown: false, 
+          headerShown: false,
+          animation: 'fade',
         }}
       >
         <Stack.Screen name="Landing" component={Landing} />

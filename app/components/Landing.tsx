@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
+    cancelAnimation,
     Easing,
     useAnimatedStyle,
     useSharedValue,
@@ -14,18 +15,27 @@ import Animated, {
     withTiming
 } from 'react-native-reanimated';
 import Cloud from '../../assets/images/Cloud';
+import Moon from '../../assets/images/Moon';
 import Sun from '../../assets/images/Sun';
 import { RootStackParamList } from '../../types/navigation';
+import { useDarkMode } from '../hooks/useDarkMode';
+import DarkModeToggle from './DarkModeToggle';
 
 type LandingNavigationProp = StackNavigationProp<RootStackParamList, 'Landing'>;
 
 const { width } = Dimensions.get('window');
 
 const Landing = () => {
+  const [isDark, setIsDark] = useDarkMode(false);
+  const themeProgress = useSharedValue(isDark ? 1 : 0);
   const navigation = useNavigation<LandingNavigationProp>();
   
   // Animation values
   const sunRotation = useSharedValue(0);
+  const sunScale = useSharedValue(1);
+  const moonScale = useSharedValue(1);
+  const sunOpacity = useSharedValue(1);
+  const moonOpacity = useSharedValue(0);
   const leftCloudOffset = useSharedValue(0);
   const rightCloudOffset = useSharedValue(0);
 
@@ -37,7 +47,7 @@ const Landing = () => {
         easing: Easing.linear
       }),
       -1, // infinite repeat
-      false // no reverse
+      true // no reverse
     );
 
     // Gentle floating animation for clouds
@@ -62,52 +72,119 @@ const Landing = () => {
     );
   }, []);
 
-  // Animated styles
+  // Animate theme transition
+  useEffect(() => {
+    themeProgress.value = withTiming(isDark ? 1 : 0, { duration: 300 });
+    
+    if (isDark) {
+      // Fade out sun
+      sunOpacity.value = withTiming(0, { duration: 300 });
+      // Fade in moon
+      moonOpacity.value = withTiming(1, { duration: 300 });
+    } else {
+      // Fade in sun
+      sunOpacity.value = withTiming(1, { duration: 300 });
+      // Fade out moon
+      moonOpacity.value = withTiming(0, { duration: 300 });
+    }
+  }, [isDark]);
+
+  const handleGetStarted = () => {
+    // Stop continuous rotation to prevent jitter during large scale
+    cancelAnimation(sunRotation);
+    // Animate clouds and celestial body
+    rightCloudOffset.value = withTiming(-width, { duration: 1000 });
+    leftCloudOffset.value = withTiming(width, { duration: 1000 });
+
+    // Delay scale animation by 1 second
+    setTimeout(() => {
+      if (isDark) {
+        moonScale.value = withTiming(15, { duration: 1000, easing: Easing.inOut(Easing.ease) });
+      } else {
+        sunScale.value = withTiming(15, { duration: 1000, easing: Easing.inOut(Easing.ease) });
+      }
+    }, 1000);
+
+    // Navigate to Home after animations
+    setTimeout(() => {
+      navigation.navigate('Home');
+    }, 2000);
+  };
+
   const sunStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${sunRotation.value}deg` }]
+    opacity: sunOpacity.value,
+    transform: [
+      { rotate: `${sunRotation.value}deg` },
+      { scale: sunScale.value }
+    ],
+  }));
+
+  const moonStyle = useAnimatedStyle(() => ({
+    opacity: moonOpacity.value,
+    transform: [
+      { scale: moonScale.value }
+    ]
   }));
 
   const leftCloudStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: leftCloudOffset.value }]
+    transform: [{ translateX: leftCloudOffset.value }],
   }));
 
   const rightCloudStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: rightCloudOffset.value }]
+    transform: [{ translateX: rightCloudOffset.value }],
   }));
 
-  const handleGetStarted = () => {
-    navigation.navigate('Home');
-  };
+  const overlayStyle = useAnimatedStyle(() => ({ opacity: themeProgress.value }));
 
   return (
-    <LinearGradient
-      colors={['#fceabb', '#f8b500']}
-      style={styles.container}
-      start={{ x: 0.2, y: 0.1 }}
-      end={{ x: 1, y: 1 }}
-    >
-      <StatusBar style="dark" />
+    <>
+      <LinearGradient
+        colors={['#fceabb', '#f8b500']}
+        style={styles.container}
+        start={{ x: 0.2, y: 0.1 }}
+        end={{ x: 1, y: 1 }}
+      />
+      <Animated.View style={[styles.absoluteFill, overlayStyle]}>  
+        <LinearGradient
+          colors={['#1E3A8A', '#0F172A']}
+          style={styles.container}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        />
+      </Animated.View>
+      <View style={styles.contentWrapper}>
+        <StatusBar style={isDark ? 'light' : 'dark'} />
 
-      <View style={styles.logoContainer}>
-        <View style={styles.weatherElements}>
-          <Animated.View style={[styles.leftCloudWrapper, leftCloudStyle]}>
-            <Cloud width={width * 0.35} height={width * 0.21} color="#FFFFFF" />
-          </Animated.View>
-          <Animated.View style={[styles.sunWrapper, sunStyle]}>
-            <Sun size={width * 0.32} color="#FFFFFF" />
-          </Animated.View>
-          <Animated.View style={[styles.rightCloudWrapper, rightCloudStyle]}>
-            <Cloud width={width * 0.4} height={width * 0.24} color="#FFFFFF" />
-          </Animated.View>
+        <View style={styles.toggleWrapper}>
+          <DarkModeToggle value={isDark} onValueChange={setIsDark} />
+        </View>
+
+        <View style={styles.logoContainer}>
+          <View style={styles.weatherElements}>
+            <Animated.View style={[styles.moonWrapper, moonStyle]}>
+              <Moon size={width * 0.42} color="#FFFFFF" />
+            </Animated.View>
+            <Animated.View style={[styles.sunWrapper, sunStyle]}>
+              <Sun size={width * 0.42} color="#FFFFFF" />
+            </Animated.View>
+            <Animated.View style={[styles.leftCloudWrapper, leftCloudStyle]}>
+              <Cloud width={width * 0.45} height={width * 0.27} color="#FFFFFF" />
+            </Animated.View>
+            <Animated.View style={[styles.rightCloudWrapper, rightCloudStyle]}>
+              <Cloud width={width * 0.5} height={width * 0.3} color="#FFFFFF" />
+            </Animated.View>
+          </View>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleGetStarted} activeOpacity={0.85}>
+            <View style={styles.button}>
+              <Text style={[styles.buttonText, { color: isDark ? '#1E3A8A' : '#f8b500' }]}>Get Started</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
-
-      <TouchableOpacity onPress={handleGetStarted} activeOpacity={0.85}>
-        <View style={styles.button}>
-          <Text style={styles.buttonText}>Get Started</Text>
-        </View>
-      </TouchableOpacity>
-    </LinearGradient>
+    </>
   );
 };
 
@@ -117,12 +194,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  absoluteFill: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  contentWrapper: {
+    ...StyleSheet.absoluteFillObject,
+  },
   logoContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 32,
     width: '100%',
+    overflow: 'visible',
   },
   weatherElements: {
     position: 'relative',
@@ -130,25 +214,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: width * 0.7,
     height: width * 0.45,
+    overflow: 'visible',
   },
   leftCloudWrapper: {
     position: 'absolute',
-    top: 8,
-    left: 0,
+    top: 12, // Adjusted for larger size
+    left: -20, // Moved further left
     zIndex: 2,
-    // Drop shadow
-    shadowColor: '#000',
-    shadowOffset: { width: 2, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5, // Android shadow
-  },
-  sunWrapper: {
-    position: 'absolute',
-    top: 16,
-    left: '50%',
-    marginLeft: -(width * 0.16), // Half of sun size to center it
-    zIndex: 1,
     // Drop shadow
     shadowColor: '#000',
     shadowOffset: { width: 2, height: 4 },
@@ -158,8 +230,8 @@ const styles = StyleSheet.create({
   },
   rightCloudWrapper: {
     position: 'absolute',
-    bottom: 8,
-    right: 0,
+    bottom: 16, // Moved slightly downward
+    right: -20, // Maintained split positioning
     zIndex: 2,
     // Drop shadow
     shadowColor: '#000',
@@ -168,11 +240,18 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5, // Android shadow
   },
+  buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+  },
   button: {
     marginBottom: 80,
     backgroundColor: '#fff',
     paddingVertical: 16,
-    paddingHorizontal: 60,
+    paddingHorizontal: 32,
+    minWidth: 140,
     borderRadius: 50,
     elevation: 5,
     shadowColor: '#333',
@@ -184,6 +263,39 @@ const styles = StyleSheet.create({
     color: '#f8b500',
     fontSize: 18,
     fontWeight: '700',
+    textAlign: 'center',
+  },
+  sunWrapper: {
+    position: 'absolute',
+    top: 20, // Adjusted for larger size
+    left: '50%',
+    marginLeft: -(width * 0.21), // Half of new sun size to center it
+    zIndex: 1,
+    // Drop shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Android shadow
+  },
+  moonWrapper: {
+    position: 'absolute',
+    top: 20,
+    left: '50%',
+    marginLeft: -(width * 0.21),
+    zIndex: 1,
+    // Drop shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Android shadow
+  },
+  toggleWrapper: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 3,
   },
 });
 
