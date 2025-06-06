@@ -33,7 +33,7 @@ A simple React Native weather application built with **Expo**. Stay updated with
 
 - **Current Location Weather**: Auto-fetches weather using Expo Location.
 - **Search & Save Cities**: Search any city, validate it, and add it to your list.
-- **Persistent Storage**: Favorites and darkmode are stored with AsyncStorage.
+- **Persistent Storage**: Cities and theme preference are stored with AsyncStorage.
 - **Theming**: Toggle between light and dark mode via a React Context.
 
 ---
@@ -49,7 +49,6 @@ A simple React Native weather application built with **Expo**. Stay updated with
 - **Services**:
   - `services/weatherService.ts`: API calls to fetch weather and validation.
 - **Storage**:
-  - `storage/LastSearch.tsx`: Save & load last search.
   - AsyncStorage for persisting favorite cities list.
 
 ---
