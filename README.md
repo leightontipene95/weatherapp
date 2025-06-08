@@ -1,6 +1,13 @@
 # 🌤️ WeatherApp
 
-A simple React Native weather application built with **Expo**. Stay updated with the latest weather for your current location and your favorite cities! Developed for a technical task for a job interview stage.
+A simple React Native weather application built with **Expo**. Stay updated with the latest weather for your current location and your favorite cities! Developed for a technical task for a job interview.
+
+## 🖼️ Screenshots
+
+| Light Mode | Dark Mode |
+| :--------: | :-------: |
+| ![](assets/images/light-mode-home.png){width="150"} | ![](assets/images/dark-mode-home.png){width="150"} |
+| ![](assets/images/location-card.png){width="150"} | ![](assets/images/search-and-city-cards.png){width="150"} |
 
 ---
 
@@ -67,26 +74,4 @@ A simple React Native weather application built with **Expo**. Stay updated with
 - **Over-the-Air Updates**: Push JavaScript updates instantly with EAS Update. 🌐
 - **Unified Tooling**: One CLI, consistent APIs across platforms.
 - **Extensible**: Built-in and community plugins (Location, LinearGradient, etc.).
-
----
-
-## 🖼️ Screenshots
-<table>
-  <tr>
-    <td align="center">
-      <img src="assets/images/light-mode-home.png" width="200" alt="Light Mode Home"/><br/>Light Mode Landing
-    </td>
-    <td align="center">
-      <img src="assets/images/dark-mode-home.png" width="200" alt="Dark Mode Home"/><br/>Dark Mode Landing
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="assets/images/location-card.png" width="200" alt="Location Card"/><br/>Light Mode Home
-    </td>
-    <td align="center">
-      <img src="assets/images/search-and-city-cards.png" width="200" alt="Search & City Cards"/><br/>Dark Mode Home
-    </td>
-  </tr>
-</table>
 
