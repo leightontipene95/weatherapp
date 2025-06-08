@@ -71,12 +71,22 @@ A simple React Native weather application built with **Expo**. Stay updated with
 ---
 
 ## 🖼️ Screenshots
-
-| Light Mode Home | Dark Mode Home |
-| :--------------: | :-------------: |
-| ![Light Mode Home](assets/images/light-mode-home.png) | ![Dark Mode Home](assets/images/dark-mode-home.png) |
-
-| Location Card | Search & City Cards |
-| :-----------: | :------------------: |
-| ![Location Card](assets/images/location-card.png) | ![Search & City Cards](assets/images/search-and-city-cards.png) |
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/images/light-mode-home.png" width="200" alt="Light Mode Home"/><br/>Light Mode Landing
+    </td>
+    <td align="center">
+      <img src="assets/images/dark-mode-home.png" width="200" alt="Dark Mode Home"/><br/>Dark Mode Landing
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="assets/images/location-card.png" width="200" alt="Location Card"/><br/>Light Mode Home
+    </td>
+    <td align="center">
+      <img src="assets/images/search-and-city-cards.png" width="200" alt="Search & City Cards"/><br/>Dark Mode Home
+    </td>
+  </tr>
+</table>
 
