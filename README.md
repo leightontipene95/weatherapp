@@ -3,11 +3,24 @@
 A simple React Native weather application built with **Expo**. Stay updated with the latest weather for your current location and your favorite cities! Developed for a technical task for a job interview.
 
 ## 🖼️ Screenshots
-
-| Light Mode | Dark Mode |
-| :--------: | :-------: |
-| ![](assets/images/light-mode-home.png){width="150"} | ![](assets/images/dark-mode-home.png){width="150"} |
-| ![](assets/images/location-card.png){width="150"} | ![](assets/images/search-and-city-cards.png){width="150"} |
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/images/light-mode-home.png" width="150" alt="Light Mode Home"/><br/>Light Mode
+    </td>
+    <td align="center">
+      <img src="assets/images/dark-mode-home.png" width="150" alt="Dark Mode Home"/><br/>Dark Mode
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="assets/images/location-card.png" width="150" alt="Location Card"/><br/>Location Card
+    </td>
+    <td align="center">
+      <img src="assets/images/search-and-city-cards.png" width="150" alt="Search & City Cards"/><br/>Search & City Cards
+    </td>
+  </tr>
+</table>
 
 ---
 
