@@ -74,9 +74,9 @@ A simple React Native weather application built with **Expo**. Stay updated with
 
 | Light Mode Home | Dark Mode Home |
 | :--------------: | :-------------: |
-| ![](assets/images/Simulator Screenshot - iPhone 16 Pro - 2025-06-08 at 17.48.05.png) | ![](assets/images/Simulator Screenshot - iPhone 16 Pro - 2025-06-08 at 17.48.08.png) |
+| ![Light Mode Home](assets/images/light-mode-home.png) | ![Dark Mode Home](assets/images/dark-mode-home.png) |
 
 | Location Card | Search & City Cards |
 | :-----------: | :------------------: |
-| ![](assets/images/Simulator Screenshot - iPhone 16 Pro - 2025-06-08 at 17.48.33.png) | ![](assets/images/Simulator Screenshot - iPhone 16 Pro - 2025-06-08 at 17.48.38.png) |
+| ![Location Card](assets/images/location-card.png) | ![Search & City Cards](assets/images/search-and-city-cards.png) |
 
